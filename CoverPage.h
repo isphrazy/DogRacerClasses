@@ -1,8 +1,10 @@
 #import <Foundation/Foundation.h>
+
 #import "cocos2d.h"
-#import "GameEngineLayer.h"
+
 #import "CCSlider.h"
 #import "FileManager.h"
+#import "WorldSelectionPage.h"
 
 typedef enum PAGE_MODE{
     FRONT_PAGE,

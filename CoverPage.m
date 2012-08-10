@@ -18,9 +18,11 @@
     CoverPage *coverPage = [CoverPage node];
     
     [coverPage initVars];
-    
+ 
     [coverPage init_bg];
+  
     [coverPage init_img];
+    
     [scene addChild:coverPage];
     
     return scene;
@@ -38,17 +40,17 @@
     
     CCMenuItem *playbutton = [CoverPage make_button_img:@"Front-Page_PLAY.png"
                                                  imgsel:@"Front-Page_PLAY-withLight.png" 
-                                         onclick_target:self selector:@selector(playbutton_action)];
+                                         onclick_target:self selector:@selector(playButtonListener)];
     playbutton.position = ccp( wid/2 - playbutton.rect.size.width/2 + PLAYBUTTON_OFFSET_X,-hei/2 + playbutton.rect.size.height/2 + PLAYBUTTON_OFFSET_Y );
     
     CCMenuItem *settingsbutton = [CoverPage make_button_img:@"Front-Page_option.png"
                                                  imgsel:@"Front-Page_option-withlight.png" 
-                                         onclick_target:self selector:@selector(settingsbutton_action)];
+                                         onclick_target:self selector:@selector(settingsButtonListener)];
     settingsbutton.position = ccp(-wid/2+settingsbutton.rect.size.width/2,-hei/2 + settingsbutton.rect.size.height/2);
     
     CCMenuItem *scoresbutton = [CoverPage make_button_img:@"Front-Page_scores.png"
                                                      imgsel:@"Front-Page_scores-withlight.png" 
-                                             onclick_target:self selector:@selector(scoresbutton_action)];
+                                             onclick_target:self selector:@selector(scoresButtonListener)];
     scoresbutton.position = ccp(-wid/2+scoresbutton.rect.size.width/2,-hei/2 + scoresbutton.rect.size.height/2 + settingsbutton.rect.size.height );
     
     CCMenuItem *logo = [CCMenuItemImage itemFromNormalImage:@"Front-Page_title.png" selectedImage:@"Front-Page_title.png"];
@@ -58,9 +60,9 @@
     [self addChild:front_menu];
 }
 
--(void)playbutton_action {
+-(void)playButtonListener {
     [[[CCDirector sharedDirector] runningScene] removeAllChildrenWithCleanup:YES];
-    [[CCDirector sharedDirector] replaceScene: [GameEngineLayer scene_with:@"test"]];
+    [[CCDirector sharedDirector] replaceScene: [WorldSelectionPage scene]];
 }
 
 -(void) setSettingPage{
@@ -199,6 +201,7 @@
 
 -(void)dealloc{
     [self removeAllChildrenWithCleanup:YES];
+    [settingLayer removeAllChildrenWithCleanup:YES];
     [super dealloc];
 }
 
