@@ -16,6 +16,13 @@ NSString *const backgroundsFilesName[] = {@"1green_background.png", @"2winter_ba
 
 NSString *const circlesFilesName[] = {@"1green_world.png", @"2winter_world.png", @"3autumn_world.png", @"4summer_world.png"};
 
+-(void) setupReturnButton{
+
+    returnButton = [self makeMenu:@"back_button.png" imgsel:@"back_button_withlight.png" onclick_target:self selector:@selector(gobackFromLevelSelection)];
+    returnMenu = [[CCMenu menuWithItems:returnButton, nil] retain];
+    returnMenu.position = ccp(30, 290);
+}
+
 -(id)init{
     self = [super init];
     if (self) {
@@ -26,11 +33,116 @@ NSString *const circlesFilesName[] = {@"1green_world.png", @"2winter_world.png",
         screenHeight = [UIScreen mainScreen].bounds.size.width;
         screenWidth = [UIScreen mainScreen].bounds.size.height;
         worldWrapperArr = [[NSMutableArray alloc] init];
+        levels = [[NSMutableArray alloc] init];
         for(int i = 0; i < WORLD_COUNT; i++){
             [worldWrapperArr addObject: [[WorldWrapper alloc] init]];
+            [levels addObject:[NSNull null]];
         }
+        [self setupReturnButton];
     }
     return self;
+}
+
+-(void) gobackFromLevelSelection{
+    NSLog(@"go back level");
+    mode = SWITCHING_BACK_FROM_LEVEL_SELECTION;
+    dots.visible = YES;
+    currentRotatingCircles.visible = YES;
+    [worldSelectionPage removeChild:returnMenu cleanup:NO];
+}
+
+
+
+-(void)switchingToLevelSelectionPage{
+    
+    if(currentLevelSelection.position.x - screenWidth / 2 <= SWITCH_WORLD_SPEED){
+        
+        currentLevelSelection.position = ccp(screenWidth / 2, screenHeight / 2);
+        currentRotatingCircles.visible = NO;
+        mode = LEVEL_SELECTION;
+        [worldSelectionPage addChild:returnMenu];
+        
+    }else{
+        
+        currentLevelSelection.position = ccp(currentLevelSelection.position.x - SWITCH_WORLD_SPEED, currentLevelSelection.position.y);
+        currentRotatingCircles.position = ccp(currentRotatingCircles.position.x - SWITCH_WORLD_SPEED, currentRotatingCircles.position.y);
+    }
+    
+}
+
+-(void) switchingFromLevelSelectionPage{
+    
+    if (screenWidth / 2 - currentRotatingCircles.position.x <= SWITCH_WORLD_SPEED) {
+        [worldSelectionPage removeChild:currentLevelSelection cleanup:NO];
+        currentRotatingCircles.position = ccp(screenWidth / 2, screenHeight / 2);
+        mode = NORMAL;
+    }else{
+        
+        currentLevelSelection.position = ccp(currentLevelSelection.position.x + SWITCH_WORLD_SPEED, currentLevelSelection.position.y);
+        currentRotatingCircles.position = ccp(currentRotatingCircles.position.x + SWITCH_WORLD_SPEED, currentRotatingCircles.position.y);
+    }
+}
+
+-(void) switchingWorld{
+    BOOL end = NO;
+    if(mode == SWITCHING_WORLD_RIGHT){
+        if(nextCircle.position.x <= screenWidth / 2 + SWITCH_WORLD_SPEED){
+            end = YES;
+            //                
+        }else{
+            currentBackground.opacity -= BACKGROUND_OPACITY_SPEED;
+            nextBackground.opacity += BACKGROUND_OPACITY_SPEED;
+            CGPoint currentCirclePos = currentRotatingCircles.position;
+            currentRotatingCircles.position = ccp(currentCirclePos.x - SWITCH_WORLD_SPEED, currentCirclePos.y);
+            
+            CGPoint nextCirclePos = nextCircle.position;
+            nextCircle.position = ccp(nextCirclePos.x - SWITCH_WORLD_SPEED, nextCirclePos.y);
+        }
+        
+        
+    }else{
+        if(nextCircle.position.x >= screenWidth / 2 - SWITCH_WORLD_SPEED){
+            end = YES;
+        }else{
+            currentBackground.opacity -= BACKGROUND_OPACITY_SPEED;
+            nextBackground.opacity += BACKGROUND_OPACITY_SPEED;
+            CGPoint currentCirclePos = currentRotatingCircles.position;
+            currentRotatingCircles.position = ccp(currentCirclePos.x + SWITCH_WORLD_SPEED, currentCirclePos.y);
+            
+            CGPoint nextCirclePos = nextCircle.position;
+            nextCircle.position = ccp(nextCirclePos.x + SWITCH_WORLD_SPEED, nextCirclePos.y);
+        }
+    }
+    
+    if (end){
+        nextCircle.position = ccp(screenWidth / 2, screenHeight / 2);
+        
+        nextBackground.opacity = 255;
+        mode = NORMAL;
+        [circleMenu removeChild:currentRotatingCircles cleanup:NO];
+        currentRotatingCircles = nextCircle;
+        
+        [worldSelectionPage removeChild:currentBackground cleanup:NO];
+        
+        currentBackground = nextBackground;
+        
+        if(worldIndex == SNOW_WORLD_INDEX){
+            snowing = YES;
+            snows.visible = YES;
+        }else if(snowing){
+            snowing = NO;
+            snows.visible = NO;
+        }
+        
+        if(worldIndex ==  STARS_WORLD_INDEX){
+            [worldSelectionPage reorderChild:stars z:4];
+            staring = YES;
+            stars.visible = YES;
+        }else if(staring){
+            staring = NO;
+            stars.visible = NO;
+        }
+    }
 }
 
 //update loop
@@ -41,65 +153,13 @@ NSString *const circlesFilesName[] = {@"1green_world.png", @"2winter_world.png",
     
     [currentCloud update_posx:2 posy:2];
     if(mode == SWITCHING_WORLD_RIGHT || mode == SWITCHING_WORLD_LEFT){
-        BOOL end = NO;
-        if(mode == SWITCHING_WORLD_RIGHT){
-            if(nextCircle.position.x <= screenWidth / 2 + SWITCH_WORLD_SPEED){
-                end = YES;
-//                
-            }else{
-                currentBackground.opacity -= BACKGROUND_OPACITY_SPEED;
-                nextBackground.opacity += BACKGROUND_OPACITY_SPEED;
-                CGPoint currentCirclePos = currentRotatingCircles.position;
-                currentRotatingCircles.position = ccp(currentCirclePos.x - SWITCH_WORLD_SPEED, currentCirclePos.y);
+        [self switchingWorld];
                 
-                CGPoint nextCirclePos = nextCircle.position;
-                nextCircle.position = ccp(nextCirclePos.x - SWITCH_WORLD_SPEED, nextCirclePos.y);
-            }
-            
-            
-        }else{
-            if(nextCircle.position.x >= screenWidth / 2 - SWITCH_WORLD_SPEED){
-                end = YES;
-            }else{
-                currentBackground.opacity -= BACKGROUND_OPACITY_SPEED;
-                nextBackground.opacity += BACKGROUND_OPACITY_SPEED;
-                CGPoint currentCirclePos = currentRotatingCircles.position;
-                currentRotatingCircles.position = ccp(currentCirclePos.x + SWITCH_WORLD_SPEED, currentCirclePos.y);
-                
-                CGPoint nextCirclePos = nextCircle.position;
-                nextCircle.position = ccp(nextCirclePos.x + SWITCH_WORLD_SPEED, nextCirclePos.y);
-            }
-        }
-        
-        if (end){
-            nextCircle.position = ccp(screenWidth / 2, screenHeight / 2);
-            
-            nextBackground.opacity = 255;
-            mode = NORMAL;
-            [circleMenu removeChild:currentRotatingCircles cleanup:NO];
-            currentRotatingCircles = nextCircle;
-            
-            [worldSelectionPage removeChild:currentBackground cleanup:NO];
-            
-            currentBackground = nextBackground;
-            
-            if(worldIndex == SNOW_WORLD_INDEX){
-                snowing = YES;
-                snows.visible = YES;
-            }else if(snowing){
-                snowing = NO;
-                snows.visible = NO;
-            }
-            
-            if(worldIndex ==  STARS_WORLD_INDEX){
-                [worldSelectionPage reorderChild:stars z:4];
-                staring = YES;
-                stars.visible = YES;
-            }else if(staring){
-                staring = NO;
-                stars.visible = NO;
-            }
-        }
+    }else if(mode == SWITCHING_TO_LEVEL_SELECTION){
+        [self switchingToLevelSelectionPage];
+
+    }else if(mode == SWITCHING_BACK_FROM_LEVEL_SELECTION){
+        [self switchingFromLevelSelectionPage];
         
     }
     if(snowing){
@@ -232,17 +292,17 @@ NSString *const circlesFilesName[] = {@"1green_world.png", @"2winter_world.png",
 }
 
 -(CCSprite *) setupLevelSelection{
-    levelSelection = [[CCSprite alloc ] init ];
+    CCSprite *levelSelection = [[CCSprite alloc ] init ];
     CCMenu *lsMenu = [CCMenu menuWithItems:nil];
-//    lsMenu.anchorPoint = ccp([lsMenu boundingBox].size.width, [lsMenu boundingBox].size.height);
+
     [levelSelection addChild:lsMenu];
-//    levelSelection = [CCMenu menuWithItems:nil];
-    
+
+    int levelReached = arc4random() % LEVEL_COUNT;
     for(int i = 0; i < LEVEL_COUNT; i++){
-        NSString *fileName = [NSString stringWithFormat: @"Level-Selection_%d.png", i + 1];
+        NSString *fileName = i < levelReached ? [NSString stringWithFormat: @"Level-Selection_%d.png", i + 1] : @"Level-Selection_lock.png";
         CCMenuItem *levelButton = [self makeMenu:fileName imgsel:fileName onclick_target:self selector:@selector(selectLevel)];
         
-//        [levelSelection addChild:levelButton];
+
         [lsMenu addChild:levelButton z:1 tag:i];
         
         float x = (i % LEVEL_SELECTION_WIDTH - (1.0 * LEVEL_SELECTION_WIDTH - 1) / 2) * LEVEL_SELECTION_X_GAP;
@@ -252,7 +312,8 @@ NSString *const circlesFilesName[] = {@"1green_world.png", @"2winter_world.png",
         
         CCSprite *levelScore = [[CCSprite alloc ] init ];
         for (int j = 0; j < LEVEL_SCORE_COUNT; j++) {
-            CCSprite *levelScoreDot = [[CCSprite alloc] initWithFile:@"Level-Selection_gold-star.png"];
+            NSString *levelStar = i < levelReached ? @"Level-Selection_gold-star.png" : @"Level-Selection_blank-star.png";
+            CCSprite *levelScoreDot = [[CCSprite alloc] initWithFile:levelStar];
             [levelScore addChild:levelScoreDot];
             int sdx = (j - (1.0 * LEVEL_SCORE_COUNT - 1) / 2) * LEVEL_SCORE_DOT_X_GAP;
             levelScoreDot.position = ccp(sdx, 0);
@@ -260,11 +321,12 @@ NSString *const circlesFilesName[] = {@"1green_world.png", @"2winter_world.png",
         [levelSelection addChild:levelScore];
         levelScore.position = ccp(x, y - 55);
         
+//        [fileName release];
     }
-//    lsMenu.position = ccp(screenWidth / 2, screenHeight / 2 + 20);
+
     levelSelection.position = ccp(screenWidth / 2, screenHeight / 2 + 20);
   
-    levelSelection.visible = NO;
+    
     return levelSelection;
 }
 
@@ -277,10 +339,10 @@ NSString *const circlesFilesName[] = {@"1green_world.png", @"2winter_world.png",
     [worldSelectionPage addChild:[worldSelectionPage setupCircles]];
     [worldSelectionPage addChild:[worldSelectionPage setupDog]];
     [worldSelectionPage addChild:[worldSelectionPage setupDots]];
-    [worldSelectionPage addChild:[worldSelectionPage setupClouds]];
+//    [worldSelectionPage addChild:[worldSelectionPage setupClouds]];
     [worldSelectionPage addChild:[worldSelectionPage setupSnow]];
     [worldSelectionPage addChild:[worldSelectionPage setupStars]];
-    [worldSelectionPage addChild:[worldSelectionPage setupLevelSelection]];
+    
     
     [scene addChild: worldSelectionPage];
     
@@ -374,6 +436,17 @@ NSString *const circlesFilesName[] = {@"1green_world.png", @"2winter_world.png",
 //will be called when a circle is clicked
 -(void) selectWorld{
     NSLog(@"select world");
+    if([levels objectAtIndex:worldIndex] == [NSNull null]){
+        
+        [levels replaceObjectAtIndex:worldIndex withObject:[self setupLevelSelection]];
+        
+    }
+    currentLevelSelection = [levels objectAtIndex:worldIndex];
+    currentLevelSelection.position = ccp(screenWidth, screenHeight / 2);
+    [worldSelectionPage addChild:currentLevelSelection];
+    dots.visible = NO;
+    mode = SWITCHING_TO_LEVEL_SELECTION;
+    
 }
 
 

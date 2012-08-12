@@ -20,7 +20,12 @@ FOUNDATION_EXPORT NSString *const circlesFilesName[];
 
 typedef enum WorldSelectionMode{
     
-    NORMAL, SWITCHING_WORLD_RIGHT, SWITCHING_WORLD_LEFT
+    NORMAL, 
+    SWITCHING_WORLD_RIGHT, 
+    SWITCHING_WORLD_LEFT, 
+    SWITCHING_TO_LEVEL_SELECTION, 
+    SWITCHING_BACK_FROM_LEVEL_SELECTION,
+    LEVEL_SELECTION,
     
 }WorldSelectionMode;
 
@@ -33,7 +38,6 @@ typedef enum WorldSelectionMode{
 
     CCMenuItem *currentRotatingCircles;
     CCMenuItem *nextCircle;
-    CCSprite *levelSelection;
     CCMenu *circleMenu;
     CGPoint startPoint;
     CGPoint endPoint;
@@ -58,6 +62,11 @@ typedef enum WorldSelectionMode{
     BOOL snowing;
     BOOL staring;
     
+    CCSprite *currentLevelSelection;
+    NSMutableArray *levels;
+    
+    CCMenu *returnMenu;
+    CCMenuItem *returnButton;
 }
 
 #define MINIMUM_SWIPE_LENGTH 20
