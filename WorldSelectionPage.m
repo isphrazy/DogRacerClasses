@@ -165,8 +165,31 @@ NSString *const circlesFilesName[] = {@"1green_world.png", @"2winter_world.png",
                 snow.position = ccp(randX, screenHeight + 10);
             }
             snow.position = ccp(snow.position.x, snow.position.y - SNOW_SPEED);
+//            snow.rotation += 0.3;
         }
         
+    }
+    
+    if(staring){
+        CCArray *starArr = [stars children];
+        for (int i = 0; i < [starArr count]; i++) {
+            TwinklingStar *star = [starArr objectAtIndex:i];
+            if (star.opacityIncreasing) {
+                if (star.maxOpacity - star.opacity <= star.opacitySpeed) {
+                    star.opacity = star.maxOpacity;
+                    star.opacityIncreasing = NO;
+                }else{
+                    star.opacity += star.opacitySpeed;
+                }
+            }else {
+                if(star.opacity - star.opacitySpeed <= star.opacitySpeed){
+                    star.opacity = star.minOpacity;
+                    star.opacityIncreasing = YES;
+                }else {
+                    star.opacity -= star.opacitySpeed;
+                }
+            }
+        }
     }
 
 }
@@ -175,8 +198,8 @@ NSString *const circlesFilesName[] = {@"1green_world.png", @"2winter_world.png",
     snows = [CCSprite node];
     snows.visible = NO;
     for (int i = 0; i < SNOW_COUNT; i++) {
-        CCSprite *snow = [CCSprite spriteWithFile:SNOW_FILE];
-        
+        CCSprite *snow = [CCSprite spriteWithFile: arc4random() % 10 < 7 ? SNOW_FILE_1 : SNOW_FILE_2];
+        snow.scale = 0.65;
         [snows addChild:snow];
         
         int randX = arc4random() % (int)screenWidth;
@@ -278,7 +301,46 @@ NSString *const circlesFilesName[] = {@"1green_world.png", @"2winter_world.png",
 }
 
 -(CCSprite *) setupStars{
-    stars = [CCSprite spriteWithFile:@"3autumn_stars.png"];
+//    stars = [CCSprite spriteWithFile:@"3autumn_stars.png"];
+    stars = [CCSprite node];
+    for (int i = 0; i < STARS_COUNT; i++) {
+        int fileR = arc4random() % 100;
+        NSString *fileName;
+        if(fileR < 50){
+            fileName = @"star_1.png";
+        }else if(fileR < 80){
+            fileName = @"star_2.png";
+        }else{
+            fileName = @"star_3.png";
+        }
+        TwinklingStar *star = [TwinklingStar spriteWithFile:fileName];
+        
+        int randX = arc4random() % (int) screenWidth;
+        float x;
+        float startXDecrementor = 1 - STARS_X_INCREMENTOR;
+        if(randX > screenWidth / 2){
+            x = screenWidth * STARS_X_INCREMENTOR + randX * startXDecrementor;
+        }else{
+            x = randX * startXDecrementor;
+        }
+        
+//        int y  = 260 + arc4random() % 140 - 80;
+        int randY = arc4random() % (int)screenHeight;
+        int y = screenHeight * STARS_Y_INCREMENTOR + randY * (1 - STARS_Y_INCREMENTOR);
+        
+        star.position = ccp(x, y);
+        
+        star.maxOpacity = arc4random() % 205 + 50;
+//        star.minOpacity = arc4random() % star.maxOpacity;
+        star.minOpacity = arc4random() % 50;
+        star.opacitySpeed = arc4random() % 5 + 2;
+        star.opacity = arc4random() % (star.maxOpacity - star.minOpacity)+ star.minOpacity;
+        //        star.startOpacity = arc4random() % star.maxOpacity;
+        star.opacityIncreasing = arc4random() % 2;
+        
+        [stars addChild:star];
+        
+    }
     stars.anchorPoint = CGPointZero;
     stars.visible = NO;
     return stars;
@@ -459,7 +521,7 @@ NSString *const circlesFilesName[] = {@"1green_world.png", @"2winter_world.png",
             [worldSelectionPage reorderChild:currentBackground z:1];
             [worldSelectionPage reorderChild:nextBackground z:0];
 //            [worldSelectionPage reorderChild:currentRotatingCircles z:3];
-            [worldSelectionPage reorderChild:circleMenu z:3];
+            [worldSelectionPage reorderChild:circleMenu z:5];
             [worldSelectionPage reorderChild:dogMenu z:5];
             [worldSelectionPage reorderChild:dots z:4];
             [worldSelectionPage reorderChild:returnMenu z:4];

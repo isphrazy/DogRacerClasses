@@ -14,10 +14,10 @@
 #import "BackgroundObject.h"
 #import "CoverPage.h"
 #import "GameEngineLayer.h"
+#import "TwinklingStar.h"
 
 FOUNDATION_EXPORT NSString *const backgroundsFilesName[];
 FOUNDATION_EXPORT NSString *const circlesFilesName[];
-
 
 typedef enum WorldSelectionMode{
     
@@ -33,8 +33,7 @@ typedef enum WorldSelectionMode{
 @interface WorldSelectionPage : CCLayer{
     
     NSMutableArray *worldWrapperArr;
-//    NSMutableArray *backgroundsSpritesArr;
-//    NSMutableArray *circlesSpriteArr;
+
     CCSprite *dots;
 
     CCMenuItem *currentRotatingCircles;
@@ -68,9 +67,7 @@ typedef enum WorldSelectionMode{
     
     CCMenu *returnMenu;
     CCMenuItem *returnButton;
-    
-//    CCMenu *returnPageMenu;
-//    CCMenuItem *returnPageButton;
+
 }
 
 #define MINIMUM_SWIPE_LENGTH 20
@@ -90,7 +87,8 @@ typedef enum WorldSelectionMode{
 #define SNOW_WORLD_INDEX 1
 #define STARS_WORLD_INDEX 2
 #define SNOW_COUNT 40
-#define SNOW_FILE @"2winter_snow.png"
+#define SNOW_FILE_1 @"snowflakes_1.png"
+#define SNOW_FILE_2 @"snowflakes_2.png"
 #define STARS_FILE @"3autumn_stars.png"
 #define SNOW_SPEED 0.5
 #define LEVEL_COUNT 12
@@ -104,7 +102,9 @@ typedef enum WorldSelectionMode{
 #define RETURN_BUTTON_WITHLIGHT_IMG @"back_button_withlight.png" 
 #define RETURN_BUTTON_X 30
 #define RETURN_BUTTON_Y 290
+#define STARS_COUNT 40
+#define STARS_X_INCREMENTOR 0.1
+#define STARS_Y_INCREMENTOR 0.3
 
-//= {@"1green_background.png", @"2winter_background.png"};
 +(CCScene *) scene;
 @end

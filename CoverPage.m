@@ -41,7 +41,7 @@
     CCMenuItem *playbutton = [CoverPage make_button_img:@"Front-Page_PLAY.png"
                                                  imgsel:@"Front-Page_PLAY-withLight.png" 
                                          onclick_target:self selector:@selector(playButtonListener)];
-    playbutton.position = ccp( wid/2 - playbutton.rect.size.width/2 + PLAYBUTTON_OFFSET_X,-hei/2 + playbutton.rect.size.height/2 + PLAYBUTTON_OFFSET_Y );
+    playbutton.position = ccp( wid/2 - playbutton.rect.size.width/2 + PLAYBUTTON_OFFSET_X + 5,-hei/2 + playbutton.rect.size.height/2 + PLAYBUTTON_OFFSET_Y - 30);
     
     CCMenuItem *settingsbutton = [CoverPage make_button_img:@"Front-Page_option.png"
                                                  imgsel:@"Front-Page_option-withlight.png" 
