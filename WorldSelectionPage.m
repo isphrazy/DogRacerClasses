@@ -12,9 +12,9 @@
 
 static WorldSelectionPage *worldSelectionPage;
 
-NSString *const backgroundsFilesName[] = {@"1green_background.png", @"2winter_background.png", @"3autumn_background.png", @"4summer_background.png"};
+NSString *const backgroundsFilesName[] = {@"1green_background.png", @"2winter_background.png", @"3autumn_background.png", @"4summer_background.png", @"5City_background.png"};
 
-NSString *const circlesFilesName[] = {@"1green_world.png", @"2winter_world.png", @"3autumn_world.png", @"4summer_world.png"};
+NSString *const circlesFilesName[] = {@"1green_world.png", @"2winter_world.png", @"3autumn_world.png", @"4summer_world.png", @"World_5.png"};
 
 -(id)init{
     self = [super init];
@@ -127,7 +127,8 @@ NSString *const circlesFilesName[] = {@"1green_world.png", @"2winter_world.png",
             snows.visible = NO;
         }
         
-        if(worldIndex ==  STARS_WORLD_INDEX){
+        if(worldIndex ==  STARS_WORLD_INDEX_1 || 
+           worldIndex == STARS_WORLD_INDEX_2){
             [worldSelectionPage reorderChild:stars z:4];
             staring = YES;
             stars.visible = YES;

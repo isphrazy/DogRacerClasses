@@ -71,7 +71,7 @@ typedef enum WorldSelectionMode{
 }
 
 #define MINIMUM_SWIPE_LENGTH 20
-#define WORLD_COUNT 4
+#define WORLD_COUNT 5
 #define CIRCLE_ROTATION_SPEED 0.3
 #define DOG_CIRCLE_ROTATION_SPEED 0.5
 #define SWITCH_WORLD_SPEED 18
@@ -85,7 +85,8 @@ typedef enum WorldSelectionMode{
 #define DOT_GAP 15	
 #define DOT_HEIGHT 60
 #define SNOW_WORLD_INDEX 1
-#define STARS_WORLD_INDEX 2
+#define STARS_WORLD_INDEX_1 2
+#define STARS_WORLD_INDEX_2 4
 #define SNOW_COUNT 40
 #define SNOW_FILE_1 @"snowflakes_1.png"
 #define SNOW_FILE_2 @"snowflakes_2.png"
