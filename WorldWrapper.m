@@ -14,4 +14,13 @@
 @synthesize circle;
 @synthesize cloud;
 
+-(void) dealloc{
+    
+    [backgroundSprite release];
+    [circle release];
+    [cloud release];
+    
+    [super dealloc];
+}
+
 @end

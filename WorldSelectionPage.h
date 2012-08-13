@@ -12,7 +12,8 @@
 #import "cocos2d.h"
 #import "WorldWrapper.h"
 #import "BackgroundObject.h"
-
+#import "CoverPage.h"
+#import "GameEngineLayer.h"
 
 FOUNDATION_EXPORT NSString *const backgroundsFilesName[];
 FOUNDATION_EXPORT NSString *const circlesFilesName[];
@@ -67,6 +68,9 @@ typedef enum WorldSelectionMode{
     
     CCMenu *returnMenu;
     CCMenuItem *returnButton;
+    
+//    CCMenu *returnPageMenu;
+//    CCMenuItem *returnPageButton;
 }
 
 #define MINIMUM_SWIPE_LENGTH 20
@@ -78,7 +82,7 @@ typedef enum WorldSelectionMode{
 #define BACKGROUND_INITIAL_OPACITY 0
 #define DOG_POS_X 50
 #define DOG_POS_Y 50
-#define DOG_CIRCLE_OFFSET_X 8
+#define DOG_CIRCLE_OFFSET_X 10
 #define DOG_CIRCLE_OFFSET_Y 9
 #define DOG_CIRCLE_ANCHOR_OFFSET 1
 #define DOT_GAP 15	
@@ -96,6 +100,10 @@ typedef enum WorldSelectionMode{
 #define LEVEL_SELECTION_Y_GAP 70
 #define LEVEL_SCORE_DOT_X_GAP 15
 #define LEVEL_SCORE_COUNT 3
+#define RETURN_BUTTON_IMG @"back_button.png" 
+#define RETURN_BUTTON_WITHLIGHT_IMG @"back_button_withlight.png" 
+#define RETURN_BUTTON_X 30
+#define RETURN_BUTTON_Y 290
 
 //= {@"1green_background.png", @"2winter_background.png"};
 +(CCScene *) scene;

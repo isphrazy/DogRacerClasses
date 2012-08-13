@@ -200,8 +200,8 @@
 }
 
 -(void)dealloc{
+    [settingLayer removeAllChildrenWithCleanup:NO];
     [self removeAllChildrenWithCleanup:YES];
-    [settingLayer removeAllChildrenWithCleanup:YES];
     [super dealloc];
 }
 

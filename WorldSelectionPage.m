@@ -16,13 +16,6 @@ NSString *const backgroundsFilesName[] = {@"1green_background.png", @"2winter_ba
 
 NSString *const circlesFilesName[] = {@"1green_world.png", @"2winter_world.png", @"3autumn_world.png", @"4summer_world.png"};
 
--(void) setupReturnButton{
-
-    returnButton = [self makeMenu:@"back_button.png" imgsel:@"back_button_withlight.png" onclick_target:self selector:@selector(gobackFromLevelSelection)];
-    returnMenu = [[CCMenu menuWithItems:returnButton, nil] retain];
-    returnMenu.position = ccp(30, 290);
-}
-
 -(id)init{
     self = [super init];
     if (self) {
@@ -38,17 +31,17 @@ NSString *const circlesFilesName[] = {@"1green_world.png", @"2winter_world.png",
             [worldWrapperArr addObject: [[WorldWrapper alloc] init]];
             [levels addObject:[NSNull null]];
         }
-        [self setupReturnButton];
+//        [self setupReturnButton];
     }
     return self;
 }
 
 -(void) gobackFromLevelSelection{
-    NSLog(@"go back level");
+    
     mode = SWITCHING_BACK_FROM_LEVEL_SELECTION;
     dots.visible = YES;
     currentRotatingCircles.visible = YES;
-    [worldSelectionPage removeChild:returnMenu cleanup:NO];
+//    [worldSelectionPage removeChild:returnMenu cleanup:NO];
 }
 
 
@@ -60,7 +53,7 @@ NSString *const circlesFilesName[] = {@"1green_world.png", @"2winter_world.png",
         currentLevelSelection.position = ccp(screenWidth / 2, screenHeight / 2);
         currentRotatingCircles.visible = NO;
         mode = LEVEL_SELECTION;
-        [worldSelectionPage addChild:returnMenu];
+//        [worldSelectionPage addChild:returnMenu];
         
     }else{
         
@@ -179,10 +172,10 @@ NSString *const circlesFilesName[] = {@"1green_world.png", @"2winter_world.png",
 }
 
 -(CCSprite *) setupSnow{
-    snows = [[CCSprite alloc] init ];
+    snows = [CCSprite node];
     snows.visible = NO;
     for (int i = 0; i < SNOW_COUNT; i++) {
-        CCSprite *snow = [[CCSprite alloc] initWithFile:SNOW_FILE];
+        CCSprite *snow = [CCSprite spriteWithFile:SNOW_FILE];
         
         [snows addChild:snow];
         
@@ -202,7 +195,7 @@ NSString *const circlesFilesName[] = {@"1green_world.png", @"2winter_world.png",
     for (int i = 0; i < WORLD_COUNT; i ++) {
         
         WorldWrapper *currentWrapper = [worldWrapperArr objectAtIndex:i];
-        currentWrapper.backgroundSprite = [[CCSprite alloc] initWithFile:backgroundsFilesName[i]];
+        currentWrapper.backgroundSprite = [[CCSprite spriteWithFile:backgroundsFilesName[i]] retain];
         currentWrapper.backgroundSprite.anchorPoint = CGPointZero;
         currentWrapper.backgroundSprite.position = CGPointZero;
         
@@ -236,11 +229,11 @@ NSString *const circlesFilesName[] = {@"1green_world.png", @"2winter_world.png",
 
 -(CCMenu *) setupDog{
     
-    CCSprite *dog = [[CCSprite alloc ] initWithFile:@"2Dog_big-80px.png"];
-    CCSprite *bigDog = [[CCSprite alloc ] initWithFile:@"2Dog_big-80px.png"];
+    CCSprite *dog = [CCSprite spriteWithFile:@"2Dog_big-80px.png"];
+    CCSprite *bigDog = [CCSprite spriteWithFile:@"2Dog_big-80px.png"];
 
-    dogRotatingCircle = [[CCSprite alloc] initWithFile:@"1green_dog1_indicator(white-transparent).png"];
-    dogRotatingCircleBig = [[CCSprite alloc] initWithFile:@"1green_dog1_indicator(white-transparent).png"];
+    dogRotatingCircle = [CCSprite spriteWithFile:@"dog_dots.png"];
+    dogRotatingCircleBig = [CCSprite spriteWithFile:@"dog_dots.png"];
     dogRotatingCircle.position = ccp(DOG_POS_X - DOG_CIRCLE_OFFSET_X, 
                                      DOG_POS_Y - DOG_CIRCLE_OFFSET_Y);
     dogRotatingCircleBig.position = ccp(DOG_POS_X - DOG_CIRCLE_OFFSET_X,
@@ -260,15 +253,15 @@ NSString *const circlesFilesName[] = {@"1green_world.png", @"2winter_world.png",
 }
 
 -(CCSprite *) setupDots{
-    dots = [[CCSprite alloc] init ];
+    dots = [CCSprite node];
     
     for (int i = 0; i < WORLD_COUNT; i++) {
-        CCSprite *dot = [[CCSprite alloc] initWithFile:@"1green_dot_small.png"];
+        CCSprite *dot = [CCSprite spriteWithFile:@"1green_dot_small.png"];
         [dots addChild:dot z:0 tag:i];
         dot.position = ccp((i - 1.0 * (WORLD_COUNT - 1) / 2) * DOT_GAP, 0);
 
     }
-    CCSprite *bigDot = [[CCSprite alloc] initWithFile:@"1green_dot_big.png"] ;
+    CCSprite *bigDot = [CCSprite spriteWithFile:@"1green_dot_big.png"] ;
     bigDot.position = [dots getChildByTag:0].position;
 
     [dots addChild:bigDot z:1 tag:WORLD_COUNT];
@@ -285,14 +278,14 @@ NSString *const circlesFilesName[] = {@"1green_world.png", @"2winter_world.png",
 }
 
 -(CCSprite *) setupStars{
-    stars = [[CCSprite alloc] initWithFile:@"3autumn_stars.png"];
+    stars = [CCSprite spriteWithFile:@"3autumn_stars.png"];
     stars.anchorPoint = CGPointZero;
     stars.visible = NO;
     return stars;
 }
 
 -(CCSprite *) setupLevelSelection{
-    CCSprite *levelSelection = [[CCSprite alloc ] init ];
+    CCSprite *levelSelection = [CCSprite node];
     CCMenu *lsMenu = [CCMenu menuWithItems:nil];
 
     [levelSelection addChild:lsMenu];
@@ -310,10 +303,10 @@ NSString *const circlesFilesName[] = {@"1green_world.png", @"2winter_world.png",
         
         levelButton.position = ccp(x - 240, y - 190);
         
-        CCSprite *levelScore = [[CCSprite alloc ] init ];
+        CCSprite *levelScore = [CCSprite node];
         for (int j = 0; j < LEVEL_SCORE_COUNT; j++) {
             NSString *levelStar = i < levelReached ? @"Level-Selection_gold-star.png" : @"Level-Selection_blank-star.png";
-            CCSprite *levelScoreDot = [[CCSprite alloc] initWithFile:levelStar];
+            CCSprite *levelScoreDot = [CCSprite spriteWithFile:levelStar];
             [levelScore addChild:levelScoreDot];
             int sdx = (j - (1.0 * LEVEL_SCORE_COUNT - 1) / 2) * LEVEL_SCORE_DOT_X_GAP;
             levelScoreDot.position = ccp(sdx, 0);
@@ -330,6 +323,33 @@ NSString *const circlesFilesName[] = {@"1green_world.png", @"2winter_world.png",
     return levelSelection;
 }
 
+//-(CCMenu *) setupReturnPageButton{
+//    returnPageButton = [self makeMenu:RETURN_BUTTON_IMG imgsel:RETURN_BUTTON_WITHLIGHT_IMG onclick_target:self selector:@selector(finishPage)];
+//    
+//    returnPageMenu  = [CCMenu menuWithItems:returnPageButton, nil];
+//    
+//    returnPageMenu.position = ccp(RETURN_BUTTON_X, RETURN_BUTTON_Y);
+//    
+//    return returnPageMenu;
+//}
+
+-(void) returnPage{
+    if(mode == NORMAL){
+        [[CCDirector sharedDirector] replaceScene: [CoverPage scene]];
+    }else if(mode == LEVEL_SELECTION){
+        [self gobackFromLevelSelection];
+    }
+}
+
+-(CCMenu *) setupReturnButton{
+    
+    returnButton = [self makeMenu: RETURN_BUTTON_IMG imgsel:RETURN_BUTTON_WITHLIGHT_IMG onclick_target:self selector:@selector(returnPage)];
+    returnMenu = [[CCMenu menuWithItems:returnButton, nil] retain];
+    returnMenu.position = ccp(RETURN_BUTTON_X, RETURN_BUTTON_Y);
+    
+    return returnMenu;
+}
+
 +(CCScene *) scene{
     CCScene *scene = [CCScene node];
    
@@ -342,6 +362,7 @@ NSString *const circlesFilesName[] = {@"1green_world.png", @"2winter_world.png",
 //    [worldSelectionPage addChild:[worldSelectionPage setupClouds]];
     [worldSelectionPage addChild:[worldSelectionPage setupSnow]];
     [worldSelectionPage addChild:[worldSelectionPage setupStars]];
+    [worldSelectionPage addChild:[worldSelectionPage setupReturnButton]];
     
     
     [scene addChild: worldSelectionPage];
@@ -364,9 +385,21 @@ NSString *const circlesFilesName[] = {@"1green_world.png", @"2winter_world.png",
 //    [backgroundsSpritesArr release];
 //    [circlesSpriteArr release];
     for(int i = 0; i < [worldWrapperArr count]; i++){
+        
         [[worldWrapperArr objectAtIndex:i] release];
     }
+    
     [worldWrapperArr release];
+    
+    [levels release];
+//    [returnMenu removeAllChildrenWithCleanup:YES];
+//    [returnMenu release];
+//    
+//    [snows removeAllChildrenWithCleanup:YES];
+//    
+//    [dogButton removeAllChildrenWithCleanup:YES];
+//    [dogMenu removeAllChildrenWithCleanup:YES];
+    
     [worldSelectionPage removeAllChildrenWithCleanup:YES];
     [super dealloc];
 }
@@ -429,6 +462,7 @@ NSString *const circlesFilesName[] = {@"1green_world.png", @"2winter_world.png",
             [worldSelectionPage reorderChild:circleMenu z:3];
             [worldSelectionPage reorderChild:dogMenu z:5];
             [worldSelectionPage reorderChild:dots z:4];
+            [worldSelectionPage reorderChild:returnMenu z:4];
         }
     }
 }
@@ -457,6 +491,11 @@ NSString *const circlesFilesName[] = {@"1green_world.png", @"2winter_world.png",
 
 -(void) selectLevel{
     NSLog(@"select level");
+    [[CCDirector sharedDirector] replaceScene: [GameEngineLayer scene_with:@"test"]];
+}
+
+-(void) finishPage{
+    NSLog(@"finish page");
 }
 
 -(CCMenuItem*)makeMenu:(NSString*)imgfile imgsel:(NSString*)imgselfile onclick_target:(NSObject*)tar selector:(SEL)sel {
